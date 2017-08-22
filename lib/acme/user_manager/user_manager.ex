@@ -74,6 +74,29 @@ defmodule Acme.UserManager do
   end
 
   @doc """
+  Finds a user matching the given email and password.
+
+  ## Examples
+
+      iex> authenticate_with_email_and_password("example@example.org", "valid-password")
+      {:ok, %User{}}
+
+      iex> authenticate_with_email_and_password("example@example.org", "invalid-password")
+      {:error, :unauthorized}
+
+  """
+  def authenticate_with_email_and_password(email, password) do
+    with %User{password_hash: hash} = user <- Repo.get_by(User, email: email),
+         true <- Comeonin.Bcrypt.checkpw(password, hash) do
+      {:ok, user}
+    else
+      _ ->
+        Comeonin.Bcrypt.dummy_checkpw()
+        {:error, :unauthorized}
+    end
+  end
+
+  @doc """
   Updates a user.
 
   ## Examples

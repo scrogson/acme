@@ -1,36 +1,12 @@
 <div class="jumbotron">
-  <h2><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h2>
+  <%= if @current_user do %>
+    <h2><%= gettext "Welcome to %{conf}, %{name}!", conf: "ElixirConf", name: @current_user.name %></h2>
+    <%= link "Logout", to: session_path(@conn, :delete), class: "btn btn-danger", method: :delete %>
+  <% else %>
+    <h2><%= gettext "Welcome to %{conf}!", conf: "ElixirConf" %></h2>
+    <%= link "Login", to: session_path(@conn, :new), class: "btn btn-default" %>
+    or
+    <%= link "Register", to: registration_path(@conn, :new), class: "btn btn-primary" %>
+  <% end %>
   <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
-</div>
-
-<div class="row marketing">
-  <div class="col-lg-6">
-    <h4>Resources</h4>
-    <ul>
-      <li>
-        <a href="http://phoenixframework.org/docs/overview">Guides</a>
-      </li>
-      <li>
-        <a href="https://hexdocs.pm/phoenix">Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-    </ul>
-  </div>
-
-  <div class="col-lg-6">
-    <h4>Help</h4>
-    <ul>
-      <li>
-        <a href="http://groups.google.com/group/phoenix-talk">Mailing list</a>
-      </li>
-      <li>
-        <a href="http://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">@elixirphoenix</a>
-      </li>
-    </ul>
-  </div>
 </div>
