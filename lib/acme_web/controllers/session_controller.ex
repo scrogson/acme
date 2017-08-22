@@ -15,7 +15,7 @@ defmodule AcmeWeb.SessionController do
         |> put_session(:current_user_id, user.id)
         |> configure_session(renew: true)
         |> redirect(to: page_path(conn, :index))
-      {:ok, :unauthorized} ->
+      {:error, :unauthorized} ->
         conn
         |> put_flash(:error, "Incorrect email or password")
         |> render("new.html")
