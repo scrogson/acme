@@ -5,16 +5,16 @@
     </div>
   <% end %>
 
+  <%= @current_user.name %>
+
   <div class="form-group">
-    <%= label f, :subject, class: "control-label" %>
-    <%= text_input f, :subject, class: "form-control" %>
+    <%= text_input f, :subject, placeholder: "Subject", class: "form-control" %>
     <%= error_tag f, :subject %>
   </div>
 
   <div class="form-group">
-    <%= label f, :status, class: "control-label" %>
-    <%= text_input f, :status, class: "form-control" %>
-    <%= error_tag f, :status %>
+    <%= textarea f, :body, rows: 10, placeholder: "Leave a comment", class: "form-control" %>
+    <%= error_tag f, :body %>
   </div>
 
   <div class="form-group">

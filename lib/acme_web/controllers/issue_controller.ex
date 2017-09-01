@@ -2,7 +2,9 @@ defmodule AcmeWeb.IssueController do
   use AcmeWeb, :controller
 
   alias Acme.Support
-  alias Acme.Support.Issue
+  alias Acme.Support.{Comment, Issue}
+
+  plug :authorize when action not in [:index, :show]
 
   def index(conn, _params) do
     issues = Support.list_issues()
@@ -10,12 +12,13 @@ defmodule AcmeWeb.IssueController do
   end
 
   def new(conn, _params) do
-    changeset = Support.change_issue(%Issue{})
+    comment = Support.change_comment(%Comment{})
+    changeset = Support.change_issue(%Issue{comments: [comment]})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"issue" => issue_params}) do
-    case Support.create_issue(issue_params) do
+    case Support.create_issue(conn.assigns.current_user, issue_params) do
       {:ok, issue} ->
         conn
         |> put_flash(:info, "Issue created successfully.")
@@ -56,5 +59,16 @@ defmodule AcmeWeb.IssueController do
     conn
     |> put_flash(:info, "Issue deleted successfully.")
     |> redirect(to: issue_path(conn, :index))
+  end
+
+  defp authorize(conn, _) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to create or update issues")
+      |> redirect(to: page_path(conn, :index))
+      |> halt()
+    end
   end
 end
