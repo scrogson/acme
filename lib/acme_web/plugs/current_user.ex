@@ -5,7 +5,12 @@ defmodule AcmeWeb.CurrentUser do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    assign(conn, :current_user, get_user_from_session(conn))
+    user = get_user_from_session(conn)
+    token = user_token(conn, user)
+
+    conn
+    |> assign(:current_user, user)
+    |> assign(:current_user_token, token)
   end
 
   defp get_user_from_session(conn) do
@@ -14,4 +19,8 @@ defmodule AcmeWeb.CurrentUser do
       val -> UserManager.get_user!(val)
     end
   end
+
+  defp user_token(conn, %{id: id}),
+    do: Phoenix.Token.sign(conn, "user socket", id)
+  defp user_token(_, _), do: "null"
 end

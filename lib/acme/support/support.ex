@@ -6,7 +6,7 @@ defmodule Acme.Support do
   import Ecto.Query, warn: false
   alias Acme.Repo
 
-  alias Acme.Support.Issue
+  alias Acme.Support.{Comment, Issue}
 
   @doc """
   Returns the list of issues.
@@ -51,6 +51,29 @@ defmodule Acme.Support do
   """
   def create_issue(user, attrs \\ %{}) do
     Acme.Support.IssueCreator.create_issue(user, attrs)
+  end
+
+  def create_comment(issue, user, attrs) do
+    issue
+    |> Ecto.build_assoc(:comments, %{user_id: user.id})
+    |> Ecto.Changeset.cast(attrs, [:body])
+    |> Ecto.Changeset.validate_required([:body])
+    |> Repo.insert()
+    |> case do
+      {:ok, comment} ->
+        {:ok, %{comment | user: user}}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def fetch_issue_comments(issue) do
+    comments =
+      from c in Comment,
+        join: u in assoc(c, :user),
+        order_by: c.inserted_at,
+        preload: [user: u]
+    Repo.preload(issue, [comments: comments])
   end
 
   @doc """

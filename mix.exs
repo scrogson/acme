@@ -42,7 +42,8 @@ defmodule Acme.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:comeonin, "~> 4.0"},
-      {:bcrypt_elixir, "~> 0.12"}
+      {:bcrypt_elixir, "~> 0.12"},
+      {:exgravatar, "~> 2.0"}
     ]
   end
 
