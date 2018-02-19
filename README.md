@@ -1,4 +1,4 @@
-# Introducing Phoenix - ElixirConf US 2017 Training Application
+# Introducing Phoenix - Training Application
 
 ## Course Description
 
